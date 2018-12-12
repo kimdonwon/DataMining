@@ -114,7 +114,7 @@ int main(void)
 				// 품목이 맞게 삽입되었으면, 품목간, 입구로부터 거리 재설정
 				reset_Item_Distance(I);
 				distanceFromEntrance_update(I);
-
+				
 				printf("구매하시고자 하는 품목을 입력해주세요.(다 작성하였으면 마지막에 end작성)\n\n");
 				print_ItemList(I);
 

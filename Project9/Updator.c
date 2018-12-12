@@ -15,6 +15,7 @@ void hit_update(Item_Header *I, Item_bucket_Header *B)
 			if (strcmp(point_I->Name, point_B->Name) == 0)
 			{
 				point_I->Hit++;
+				
 				if(point_I->related!=NULL)
 				weight_update(point_I->related, B);
 			}
@@ -61,85 +62,94 @@ void related_Item_Update(Item *target_Item, Item_Header *I, Item_bucket_Header *
 	Item *point_I = I->head;
 	Item *point_B = B->head;
 	
-
-	if (target_Item->llink != NULL) {
-		target_Item->llink->rlink = NULL;
-		B->head = target_Item;
-		target_Item->llink = NULL;
-		B->rear->rlink = point_B;
-		point_B->llink = B->rear;
-		B->rear = point_B;
-	}
-
 	
-	
+		while (point_I != NULL) {
+			if (strcmp(point_I->Name, target_Item->Name) == 0) {
+				if (point_I->related == NULL) {
+					related_ItemList_Header *rih = (related_ItemList_Header*)malloc(sizeof(related_ItemList_Header));
+					point_I->related = rih;
+					rih->head = rih->rear = NULL;
 
-	point_B = B->head;
-	point_I = I->head;
-	while (point_I != NULL)
-	{
-		if (strcmp(point_I->Name, point_B->Name) == 0) {
-			if (point_I->related == NULL) {
-				related_ItemList_Header *rih = (related_ItemList_Header*)malloc(sizeof(related_ItemList_Header));
-				related_ItemList *ri = (related_ItemList*)malloc(sizeof(related_ItemList));
-				related_ItemList *temp = ri;
-				point_I->related = rih;
-				rih->head = rih->rear = ri;
-
-				Item *point_B2 = B->head->rlink;
-				while (point_B2 != NULL) {
-					Item *point_I2 = I->head;
-					while (point_I2 != NULL) {
-						if (strcmp(point_I2->Name, point_B2->Name) == 0) {
-							break;
-						}
-						point_I2 = point_I2->rlink;
-						
+					Item *tempb = B->head;
+					if (strcmp(point_I->Name, tempb->Name) == 0) {
+						tempb = tempb->rlink;
 					}
-					temp->item = point_I2;
-					temp->weight = 1;
-					temp->distance = 100;
-					related_ItemList *ri2 = (related_ItemList*)malloc(sizeof(related_ItemList));
-					temp->rlink = ri2;
-					if (point_B2->rlink == NULL)
-						temp->rlink = NULL;
-					temp = ri2;
-					point_B2 = point_B2->rlink;
+					related_ItemList *ri = (related_ItemList*)malloc(sizeof(related_ItemList));
+					Item *Itemp = I->head;
+					while (Itemp != NULL) {
+						if (strcmp(Itemp->Name, tempb->Name) == 0)break;
+						Itemp = Itemp->rlink;
+					}
+					ri->item = Itemp;
+					ri->weight = 0;
+					ri->distance = 100;
+					ri->rlink = ri->llink = NULL;
+					rih->head = rih->rear = ri;
+					tempb = tempb->rlink;
+					while (tempb != NULL) {
+						if (strcmp(point_I->Name, tempb->Name) != 0) {
+							related_ItemList *ri = (related_ItemList*)malloc(sizeof(related_ItemList));
+							Item *Itemp = I->head;
+							while (Itemp != NULL) {
+								if (strcmp(Itemp->Name, tempb->Name) == 0)break;
+								Itemp = Itemp->rlink;
+							}
+							ri->item = Itemp;
+							ri->weight = 0;
+							ri->distance = 100;
+							ri->rlink = ri->llink = NULL;
+							rih->rear->rlink = ri;
+							ri->llink = rih->rear;
+							rih->rear = ri;
+						}
+						tempb = tempb->rlink;
+					}
 				}
-			}
-			else {
-
-				Item *point_B = B->head->rlink;
-
-				while (point_B != NULL)
-				{
-					related_ItemList *point_R = point_I->related->head;
-					int flog = 0;
-					while (point_R!=NULL) {
-						if (strcmp(point_R->item->Name, point_B->Name) == 0) {
-							flog = 1;
-							break;
-						}
-						if (point_R->rlink == NULL)break;
-						point_R = point_R->rlink;
-					}
-
-					if (flog == 0) {
-						related_ItemList *ri2 = (related_ItemList*)malloc(sizeof(related_ItemList));
-						ri2->item = point_B;
-						ri2->weight = 1;
-						ri2->distance = 100;
-						ri2->rlink = NULL;
-						point_R->rlink = ri2;
-					}
+				else {
 					
-					point_B = point_B->rlink;
+					point_B = B->head;
+					while (point_B != NULL) {
+						int flog = 0;
+						related_ItemList *temp = point_I->related->head;
+						while (temp != NULL) {
+							if (strcmp(point_B->Name, temp->item->Name) == 0) {
+								flog = 1;
+							}
+							
+							temp = temp->rlink;
+						}
+						if (strcmp(point_B->Name, point_I->Name) == 0)flog = 1;
+						if (flog == 0) {
+							related_ItemList *ri = (related_ItemList*)malloc(sizeof(related_ItemList));
+							Item *Itemp = I->head;
+							while (Itemp != NULL) {
+								if (strcmp(Itemp->Name, point_B->Name) == 0)break;
+								Itemp = Itemp->rlink;
+							}
+							ri->item = Itemp;
+							ri->distance = 100;
+							ri->weight = 1;
+							ri->rlink = NULL;
+							
+							point_I->related->rear->rlink = ri;
+							ri->llink = point_I->related->rear;
+							point_I->related->rear = ri;
+
+						}
+						point_B = point_B->rlink;
+					}
 				}
+				break;
 			}
-			break;
+			point_I = point_I->rlink;
 		}
-		point_I = point_I->rlink;
-	}
+		
+	
+	
+
+	
+	
+
 
 	// 구현 파트
 }

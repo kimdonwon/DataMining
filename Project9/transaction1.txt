@@ -1,5 +1,3 @@
-orange
-juice
-onion
-banana
 tomato
+carrot
+juice

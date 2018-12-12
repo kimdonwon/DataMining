@@ -49,35 +49,15 @@ void insert_toItemList(Item_Header *I, Item_bucket_Header *B)
 	if (is_empty_Item(I))
 	{
 		Item *temp = (Item*)malloc(sizeof(Item));
-		*temp = *point_B;
+		temp->Name= point_B->Name;
+		temp->Hit = point_B->Hit;
+		temp->distance_fromEntrance = 10;
+		temp->related=temp->llink = temp->rlink = NULL;
+
 		I->head = temp;
-		I->rear = temp;
-		
-		point_B = point_B->rlink;
-		while (point_B != NULL) {
-			Item *temp2 = (Item*)malloc(sizeof(Item));
-			*temp2 = *point_B;
-			I->rear->rlink = temp2;
-			temp2->llink = I->rear;
-			I->rear = temp2;
-
-			point_B = point_B->rlink;
-
-		}
-	
-		point_B = B->head;
-		point_I = I->head;
-		char *tm = B->rear->Name;
-		while (point_B != NULL) {
-			related_Item_Update(point_B, I, B);
-			if (strcmp(tm, point_B->Name) == 0)break;
-			point_B = point_B->rlink;
-		}
-		
+		I->rear = temp;	
 	}
-	else
-	{
-		char *tm = B->rear->Name;
+	
 		while (point_B != NULL)
 		{
 			int flog = 0;
@@ -85,40 +65,58 @@ void insert_toItemList(Item_Header *I, Item_bucket_Header *B)
 			while (point_I != NULL)
 			{
 				if (strcmp(point_I->Name, point_B->Name) == 0) {
-					related_Item_Update(point_B,I,B);
+					//related_Item_Update(point_B,I,B);
 					flog = 1;
 					}
-				if (point_I->rlink == NULL)break;
+			
 				point_I = point_I->rlink;
 			}
 
 			if (flog == 0) {
 				Item *temp = (Item*)malloc(sizeof(Item));
-				*temp = *point_B;
+				temp->Name = point_B->Name;
+				temp->Hit = point_B->Hit;
+				temp->distance_fromEntrance = 10;
+				temp->related = temp->llink = temp->rlink = NULL;
+
 				I->rear->rlink = temp;
 				temp->llink = I->rear;
 				I->rear = temp;
-				related_Item_Update(point_B, I, B);
+				//related_Item_Update(point_B, I, B);
 				
 				
 			}
 			
-			if (strcmp(tm, point_B->Name) == 0)break;
+			point_B = point_B->rlink;
+		}
+		point_B = B->head;
+		while (point_B != NULL) {
+			related_Item_Update(point_B, I, B);
 			point_B = point_B->rlink;
 		}
 
 		
 		
 		
-	}
+	
 	// 구현 파트
 }
 
 // 아이템 리스트들에 존재하는 관련 아이템들의 품목간의
 // 거리를 기준으로 재설정해주는 함수
 // 품목간의 거리가 생성된다.(아이템에 존재하는 관련 아이템마다)
+//printf("	: 기본 설정 거리 = 100, 재설정 거리 = (기본설정거리 / (해당상품의Hit+weight)) * 10\n");
 void reset_Item_Distance(Item_Header *I)
 {
+	Item *i = I->head;
+	while (i != NULL) {
+		related_ItemList *il = i->related->head;
+		while (il != NULL) {
+			il->distance = (il->distance / (il->item->Hit*il->weight)) * 10;
+			il = il->rlink;
+		}
+		i = i->rlink;
+	}
 	// 구현 파트
 }
 

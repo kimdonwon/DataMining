@@ -1,4 +1,5 @@
-snack
+lemon
+juice
 orange
-tomato
-fish
+candy
+milk
