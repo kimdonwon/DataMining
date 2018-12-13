@@ -38,10 +38,11 @@ void related_Item_Ranking(Item *target_Item)
 	related_ItemList *point_R = target_Item->related->head;
 	related_ItemList *point_R2 = target_Item->related->head;
 	printf("|           추천상품리스트            |\n");
-	
+	//weight의 내림차순 으로 정렬
 	while (point_R != NULL) {
 		point_R2 = target_Item->related->head;
 		while (point_R2 != NULL) {
+			//비교 후 데이터를 바꿈
 			if (point_R->weight > point_R2->weight) {
 				int temp = point_R->distance;
 				point_R->distance = point_R2->distance;

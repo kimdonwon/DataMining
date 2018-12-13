@@ -157,7 +157,7 @@ int main(void)
 				printf("===============================================================================\n\n\n");
 
 				// 아이템 리스트들에 존재하는 관련 아이템들 사이의 품목간의 거리 출력
-
+				shortest_path(start_point, I);
 				point_I = I->head;
 
 				if (I->head != NULL)
@@ -171,7 +171,7 @@ int main(void)
 					}
 				}
 				// 최단경로 탐색(start_point로부터)
-				shortest_path(start_point, I);
+				_getch();
 				return 0;
 		}
 	}

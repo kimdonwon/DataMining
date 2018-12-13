@@ -62,9 +62,10 @@ void related_Item_Update(Item *target_Item, Item_Header *I, Item_bucket_Header *
 	Item *point_I = I->head;
 	Item *point_B = B->head;
 	
-	
+		// 연관 품목을 추가할 때 I의 주소로 추가함 ( hit update함수에서 I의 값을 올려주기 때문)
 		while (point_I != NULL) {
 			if (strcmp(point_I->Name, target_Item->Name) == 0) {
+				//I의 연관 품목이 처음 생성될 때
 				if (point_I->related == NULL) {
 					related_ItemList_Header *rih = (related_ItemList_Header*)malloc(sizeof(related_ItemList_Header));
 					point_I->related = rih;
@@ -75,6 +76,7 @@ void related_Item_Update(Item *target_Item, Item_Header *I, Item_bucket_Header *
 						tempb = tempb->rlink;
 					}
 					related_ItemList *ri = (related_ItemList*)malloc(sizeof(related_ItemList));
+					//연관 품목에 데이터를 처음 추가함
 					Item *Itemp = I->head;
 					while (Itemp != NULL) {
 						if (strcmp(Itemp->Name, tempb->Name) == 0)break;
@@ -86,6 +88,7 @@ void related_Item_Update(Item *target_Item, Item_Header *I, Item_bucket_Header *
 					ri->rlink = ri->llink = NULL;
 					rih->head = rih->rear = ri;
 					tempb = tempb->rlink;
+					//연관 품목에 데이터를 추가함
 					while (tempb != NULL) {
 						if (strcmp(point_I->Name, tempb->Name) != 0) {
 							related_ItemList *ri = (related_ItemList*)malloc(sizeof(related_ItemList));
@@ -106,38 +109,8 @@ void related_Item_Update(Item *target_Item, Item_Header *I, Item_bucket_Header *
 					}
 				}
 				else {
-					
-					point_B = B->head;
-					while (point_B != NULL) {
-						int flog = 0;
-						related_ItemList *temp = point_I->related->head;
-						while (temp != NULL) {
-							if (strcmp(point_B->Name, temp->item->Name) == 0) {
-								flog = 1;
-							}
-							
-							temp = temp->rlink;
-						}
-						if (strcmp(point_B->Name, point_I->Name) == 0)flog = 1;
-						if (flog == 0) {
-							related_ItemList *ri = (related_ItemList*)malloc(sizeof(related_ItemList));
-							Item *Itemp = I->head;
-							while (Itemp != NULL) {
-								if (strcmp(Itemp->Name, point_B->Name) == 0)break;
-								Itemp = Itemp->rlink;
-							}
-							ri->item = Itemp;
-							ri->distance = 100;
-							ri->weight = 1;
-							ri->rlink = NULL;
-							
-							point_I->related->rear->rlink = ri;
-							ri->llink = point_I->related->rear;
-							point_I->related->rear = ri;
-
-						}
-						point_B = point_B->rlink;
-					}
+					//연관 품목이 이미 만들어져 있을 때 중복을 찾고, 중복된 데이터가 없으면 추가함
+					search_relatedItemLocation(I->head->related, point_I, I, B);
 				}
 				break;
 			}

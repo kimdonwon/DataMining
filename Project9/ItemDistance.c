@@ -10,6 +10,7 @@ Item_distanceList* distance_update(Item_distanceList_Header *D, Item_distanceLis
 	min_pos->found = 1;
 	Item *point_I = I->head;
 	Item *temp_I;
+	//연관 품목에 연결된 노드를 찾아줌
 	while (point_I != NULL) {
 		if (strcmp(point_I->Name, min_pos->name) == 0) {
 			temp_I = point_I;
@@ -23,6 +24,7 @@ Item_distanceList* distance_update(Item_distanceList_Header *D, Item_distanceLis
 		int flog = 0;
 		temp_id = D->head;
 		while (temp_id != NULL) {
+			//노드의 연관 품목을 검사하여 거리가 더 짧으면 새로 고쳐줌
 			if (strcmp(temp_id->name, temp_R->item->Name) == 0) {
 				if (temp_id->distance > temp_R->distance + tempdis) {
 					temp_id->distance = temp_R->distance + tempdis;
@@ -32,7 +34,7 @@ Item_distanceList* distance_update(Item_distanceList_Header *D, Item_distanceLis
 			}
 			temp_id = temp_id->rlink;
 		}
-
+		// 노드의 연관 품목 중에 새로운 물품이 있으면 추가해줌
 		if (flog == 0) {
 			Item_distanceList *temp = (Item_distanceList*)malloc(sizeof(Item_distanceList));
 			temp->name = temp_R->item->Name;
@@ -50,6 +52,8 @@ Item_distanceList* distance_update(Item_distanceList_Header *D, Item_distanceLis
 
 	temp_id = D->head;
 	Item_distanceList *tm=D->head;
+	//최소 거리 검사가 끝난 데이터는 found =1임, 
+	// 검사가 필요한 데이터 중에 최소 거리 데이터를 찾아서 return함 
 	while (temp_id != NULL) {
 		if (temp_id->found != 1 && tm->distance > temp_id->distance) {
 			tm = temp_id;	
