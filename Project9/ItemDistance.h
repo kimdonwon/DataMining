@@ -24,4 +24,4 @@ typedef struct Item_distanceList_Header {
 
 }Item_distanceList_Header;
 
-Item_distanceList* distance_update(Item_distanceList_Header *D, Item_distanceList *min_pos, Item_Header *I, int weight);
+Item_distanceList* distance_update(Item_distanceList_Header *D, Item_distanceList *min_pos, Item_Header *I);

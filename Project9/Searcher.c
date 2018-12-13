@@ -29,5 +29,57 @@ related_ItemList* search_relatedItemLocation(related_ItemList_Header *R, related
 // 노드들을 할당하고 이를 계속 업데이트 해주어, 모든 지점까지의 최단경로를 설정한다.
 void shortest_path(Item *target_Item, Item_Header *I)
 {
+	Item_distanceList_Header *idh = (Item_distanceList_Header*)malloc(sizeof(Item_distanceList_Header));
+	idh->all_checked = 0;
+	idh->head = idh->rear = NULL;
+	Item *i = I->head;
+	int count = 0;
+	while (i != NULL) {
+		count++;
+		i = i->rlink;
+	}
+	related_ItemList *rl = target_Item->related->head;
+	Item_distanceList *temp = (Item_distanceList*)malloc(sizeof(Item_distanceList));
+	temp->name = target_Item->Name;
+	temp->distance = 0;
+	temp->found = 1;
+	temp->possible = 0;
+	temp->rlink = temp->llink = NULL;
+	idh->head = idh->rear = temp;
+	
+
+	while (rl != NULL) {
+		Item_distanceList *temp = (Item_distanceList*)malloc(sizeof(Item_distanceList));
+		temp->name = rl->item->Name;
+		temp->distance = rl->distance;
+		temp->found = 0;
+		temp->possible = 0;
+		temp->rlink = temp->llink = NULL;
+		idh->rear->rlink = temp;
+		temp->llink = idh->rear;
+		idh->rear = temp;
+		rl = rl->rlink;
+	}
+
+	Item_distanceList *point_rl = idh->head->rlink;
+	Item_distanceList *temp_rl = idh->head->rlink;
+	while (point_rl != NULL) {
+		if (temp_rl->distance > point_rl->distance)temp_rl = point_rl;
+		point_rl = point_rl->rlink;
+	}
+	point_rl = idh->head->rlink;
+
+	while (point_rl != NULL) {
+		temp_rl = distance_update(idh, temp_rl, I);
+		if (temp_rl == idh->head)break;
+		point_rl = point_rl->rlink;
+	}
+
+	point_rl = idh->head->rlink;
+	while (point_rl != NULL) {
+		printf("%s로부터 %s품목까지의 최단거리는 %d입니다.\n", target_Item->Name, point_rl->name, point_rl->distance);
+		point_rl = point_rl->rlink;
+	}
+	
 	// 구현 파트
 }

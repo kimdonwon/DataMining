@@ -112,7 +112,7 @@ void reset_Item_Distance(Item_Header *I)
 	while (i != NULL) {
 		related_ItemList *il = i->related->head;
 		while (il != NULL) {
-			il->distance = (il->distance / (il->item->Hit*il->weight)) * 10;
+			il->distance = (il->distance / (il->item->Hit+il->weight)) * 10;
 			il = il->rlink;
 		}
 		i = i->rlink;
