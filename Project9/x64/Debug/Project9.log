@@ -1,8 +1,2 @@
-﻿  Updator.c
-c:\users\dongwon\source\repos\project9\project9\updator.c(110): warning C4013: 'search_relatedItemLocation' undefined; assuming extern returning int
-  Searcher.c
-c:\users\dongwon\source\repos\project9\project9\searcher.c(19): warning C4133: '=': incompatible types - from 'Item *' to 'related_ItemList_Header *'
-c:\users\dongwon\source\repos\project9\project9\searcher.c(37): warning C4133: '=': incompatible types - from 'Item *' to 'related_ItemList_Header *'
-  Generating Code...
-c:\users\dongwon\source\repos\project9\project9\searcher.c(85): warning C4716: 'search_relatedItemLocation': must return a value
+﻿  ItemBucket.c
   Project9.vcxproj -> C:\Users\dongwon\source\repos\Project9\x64\Debug\Project9.exe

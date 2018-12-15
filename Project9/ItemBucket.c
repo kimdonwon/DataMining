@@ -112,9 +112,19 @@ void delete_fromItemBucket(Item_bucket_Header *B, char *name)
 void empty_out_Bucket(Item_bucket_Header *B)
 {
 	
+	Item *point_B = B->rear;
+
+	while (point_B != NULL)
+	{
+		point_B = point_B->llink;
+		free(B->rear);
+		B->rear = point_B;
+	}
 
 	B->rear = NULL;
 	B->head = NULL;
+
+	free(point_B);
 
 	
 }
